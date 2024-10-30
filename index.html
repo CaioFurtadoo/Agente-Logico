@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Jogo de Lógica dos Agentes</title>
+        <style>
+            body {
+                background-color: #0d1117;
+                color: #c9d1d9;
+                font-family: "Roboto", sans-serif;
+                text-align: center;
+                margin: 0;
+                padding: 0;
+                padding-top: 50px;
+            }
+
+            h1,
+            h2,
+            p,
+            select,
+            button {
+                margin: 0;
+                padding: 0;
+            }
+
+            #jogo,
+            #inicio,
+            #fim {
+                background-color: #161b22;
+                border: 1px solid #30363d;
+                border-radius: 12px;
+                width: 80%;
+                max-width: 600px;
+                margin: 30px auto;
+                padding: 20px;
+                box-shadow: 0 0 20px #00000033;
+            }
+
+            h1 {
+                font-size: 28px;
+                color: #58a6ff;
+                margin-bottom: 20px;
+            }
+
+            p {
+                margin-bottom: 15px;
+                line-height: 1.6;
+            }
+
+            select,
+            button {
+                margin: 10px 0;
+                padding: 12px 20px;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                cursor: pointer;
+                background-color: #21262d;
+                color: #c9d1d9;
+                transition: background-color 0.3s ease;
+            }
+
+            select {
+                background-color: #21262d;
+            }
+
+            button:hover {
+                background-color: #30363d;
+            }
+
+            #resultado,
+            #narrativa,
+            #historiaCompleta {
+                font-weight: bold;
+                margin-top: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                line-height: 1.4;
+            }
+
+            #narrativa p {
+                width: 600px;
+            }
+
+            .tirarNarrativa {
+                display: none;
+            }
+
+            #cronometro {
+                font-size: 22px;
+                font-weight: bold;
+                color: #ff7b72;
+            }
+
+            #pistasUsadas {
+                margin-top: 10px;
+                color: #ff6b6b;
+            }
+
+            .mensagem-enigma {
+                border: 1px solid #58a6ff;
+                background-color: #21262d;
+                color: #c9d1d9;
+                border-radius: 8px;
+                padding: 15px;
+                margin-top: 20px;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Jogo de Lógica dos Agentes</h1>
+
+        <div id="inicio">
+            <p>
+                <strong>História:</strong> Você é o agente Alex, um membro de
+                elite de uma agência de inteligência nacional. Há indícios de
+                que uma conspiração interna está em andamento, com traições e
+                ações encobertas ameaçando a segurança nacional. Sua missão é
+                simples, mas desafiadora: desmascarar os traidores dentro da
+                agência, usando apenas a lógica e as informações disponíveis. Em
+                cada fase, você receberá proposições lógicas baseadas nas ações
+                e declarações dos agentes, e precisará descobrir quem está
+                falando a verdade ou mentindo.
+            </p>
+            <p>
+                Atenção! Você tem 3 pistas disponíveis durante todo o jogo.
+                Use-as sabiamente, pois cada pista é preciosa e pode ser a chave
+                para resolver um enigma mais complicado.
+            </p>
+            <button onclick="iniciarJogo()">Iniciar Jogo</button>
+        </div>
+
+        <div id="jogo" style="display: none">
+            <p id="cronometro">Tempo Restante: <span id="tempo"></span></p>
+            <p id="mensagem"></p>
+            <p id="proposicao"></p>
+            <p id="valorConhecido"></p>
+            <p>Pista: <span id="pista"></span></p>
+            <select id="resposta">
+                <option value="">Escolha uma resposta</option>
+            </select>
+            <button onclick="verificarResposta()">Verificar</button>
+            <button onclick="usarPista()">
+                Usar Pista (Restantes: <span id="pistasRestantes">3</span>)
+            </button>
+            <p id="pistasUsadas"></p>
+            <div id="resultado"></div>
+        </div>
+
+        <div id="mensagemEnigmaContainer" style="display: none">
+            <div class="mensagem-enigma" id="mensagemEnigma"></div>
+            <button onclick="proximoEnigma()">Próximo Enigma</button>
+        </div>
+
+        <div id="fim" style="display: none">
+            <h2>Missão Concluída!</h2>
+            <div id="historiaCompleta"></div>
+            <button onclick="reiniciarJogo()">Jogar Novamente</button>
+        </div>
+
+        <script>
+            const enigmas = [
+                // Nível 1
+                {
+                    historia:
+                        "Agente Alex descobre que os documentos foram removidos de um cofre durante uma operação. P (Agente Peter) afirma que Q (Agente Quinn) estava presente no cofre. Se P está dizendo a verdade, Q deve ter sido visto no cofre.",
+                    proposicao: "P ∧ Q = V",
+                    valorConhecido: "P é verdadeiro",
+                    opcoes: [
+                        "Q = Verdadeiro",
+                        "Q = Falso",
+                        "Q = Verdadeiro/Falso",
+                    ],
+                    respostaEsperada: "Q = Verdadeiro",
+                    pista: "Peter é um agente de confiança, mas Quinn esteve sob observação recentemente.",
+                    mensagem:
+                        "O agente Alex confirma que Quinn esteve no cofre, o que levanta novas suspeitas sobre o seu envolvimento no roubo dos documentos.",
+                },
+                {
+                    historia:
+                        "Durante a investigação, o agente Alex descobre que dois agentes, R (Agente Ryan) e S (Agente Sarah), deveriam estar em locais diferentes durante a operação. No entanto, Sarah reportou que Ryan estava em uma área restrita, o que contradiz os registros oficiais.",
+                    proposicao: "¬(R ∨ S) = V",
+                    valorConhecido: "S é falso",
+                    opcoes: [
+                        "R = Verdadeiro",
+                        "apenas S = Falso",
+                        "Nenhum dos dois = Verdadeiro",
+                    ],
+                    respostaEsperada: "Nenhum dos dois = Verdadeiro",
+                    pista: "Os registros de segurança mostram falhas de acesso, mas Sarah não tem histórico de mentiras.",
+                    mensagem:
+                        "Após análise dos registros, ficou claro que nenhum dos dois agentes estava na área restrita, sugerindo uma manipulação externa para incriminar Ryan.",
+                },
+                {
+                    historia:
+                        "O agente Alex descobre que o traidor só conseguirá escapar do país se T (Agente Taylor) confiar no traidor e U (Agente Uma) der o aval final. A confiança de Taylor é essencial para a execução do plano.",
+                    proposicao: "T → U = V",
+                    valorConhecido: "T é verdadeiro",
+                    opcoes: [
+                        "U = Verdadeiro",
+                        "U = Falso",
+                        "T = Verdadeiro/Falso",
+                    ],
+                    respostaEsperada: "U = Verdadeiro",
+                    pista: "Taylor foi manipulado anteriormente, mas Uma nunca escondeu sua lealdade à agência.",
+                    mensagem:
+                        "A investigação confirma que Uma não deu o aval, frustrando a tentativa de fuga do traidor.",
+                },
+
+                // Nível 2
+                {
+                    historia:
+                        "Agente Alex encontra sinais de que os agentes V (Agente Victor) e W (Agente Walter) estavam envolvidos na manipulação do sistema de câmeras para encobrir um encontro secreto. No entanto, Victor afirma que Walter não estava no local.",
+                    proposicao: "¬W → ¬V = V",
+                    valorConhecido: "W é falso",
+                    opcoes: ["V = Verdadeiro", "V = Falso", "W = Verdadeiro"],
+                    respostaEsperada: "V = Falso",
+                    pista: "Há evidências de manipulação técnica no sistema, e Victor não tem histórico de mentiras.",
+                    mensagem:
+                        "Após a análise, Alex confirma que Victor estava no local, o que lança dúvidas sobre o envolvimento de um terceiro agente na manipulação dos registros.",
+                },
+                {
+                    historia:
+                        "Agente Alex descobre que Y (Agente Yara), uma agente conhecida por sua desonestidade, acusa Z (Agente Zach) de comportamentos suspeitos durante uma operação. No entanto, Yara possui um histórico de mentiras.",
+                    proposicao: "¬Y → Z = V",
+                    valorConhecido: "Y é falso",
+                    opcoes: ["Y = Verdadeiro", "Y = Falso", "Z = Verdadeiro"],
+                    respostaEsperada: "Z = Verdadeiro",
+                    pista: "Yara foi recentemente advertida por falsas acusações contra outros agentes.",
+                    mensagem:
+                        "Alex confirma que Zach é inocente, e a credibilidade de Yara foi ainda mais abalada, deixando sua posição na agência em risco.",
+                },
+                {
+                    historia:
+                        "O agente Alex descobre que T (Agente Taylor) havia planejado desviar informações confidenciais, mas precisava do apoio de U (Agente Uma) para isso. A confiança de Uma era essencial para o sucesso do plano.",
+                    proposicao: "¬U → T = F",
+                    valorConhecido: "U é verdadeiro",
+                    opcoes: ["T = Verdadeiro", "T = Falso", "U = Falso"],
+                    respostaEsperada: "T = Falso",
+                    pista: "U sempre se mostrou leal, mas há indícios de pressão para mudar de lado.",
+                    mensagem:
+                        "Com a lealdade de Uma confirmada, o plano de Taylor foi frustrado antes de causar danos irreversíveis.",
+                },
+
+                // Nível 3
+                {
+                    historia:
+                        "Agente Alex suspeita que dois agentes estão colaborando secretamente com uma organização inimiga. Se C (Agente Carl) está conspirando, então D (Agente Diana) deve ter fornecido acesso aos sistemas da agência.",
+                    proposicao: "(C ∧ D) → E = V",
+                    valorConhecido: "C e D são verdadeiros",
+                    opcoes: ["E = Verdadeiro", "E = Falso", "D = Falso"],
+                    respostaEsperada: "E = Verdadeiro",
+                    pista: "Diana tem acesso direto aos sistemas de segurança, mas seu registro está limpo.",
+                    mensagem:
+                        "Alex confirma que Ethan estava envolvido, revelando uma célula de conspiração dentro da agência.",
+                },
+                {
+                    historia:
+                        "Agente Alex descobre que, para ter sucesso em sua missão, um traidor deve ter o apoio de dois agentes leais, F (Agente Fiona) e G (Agente Greg). Além disso, o traidor H (Agente Henry) só consegue passar despercebido se ao menos um dos dois o apoiar.",
+                    proposicao: "(H ∧ F) ∨ (H ∧ G) = V",
+                    valorConhecido: "F é verdadeiro",
+                    opcoes: ["G = Verdadeiro", "G = Falso", "F = Falso"],
+                    respostaEsperada: "G = Verdadeiro",
+                    pista: "Fiona é conhecida por sua lealdade, mas Greg já foi visto em reuniões suspeitas.",
+                    mensagem:
+                        "Após investigação, Alex confirma que Greg deu suporte a Henry, revelando uma nova camada de traição dentro da agência.",
+                },
+                {
+                    historia:
+                        "Agente Alex descobre que uma célula inimiga infiltrada planeja uma grande sabotagem. A operação depende de I (Agente Iris) fornecer a localização de um alvo e de J (Agente Jack) neutralizar qualquer interferência da agência.",
+                    proposicao: "¬J ∧ (I → J) = V",
+                    valorConhecido: "J é falso",
+                    opcoes: ["I = Verdadeiro", "I = Falso", "J = Verdadeiro"],
+                    respostaEsperada: "I = Verdadeiro",
+                    pista: "Jack foi visto recentemente em reuniões confidenciais com outros agentes.",
+                    mensagem:
+                        "Alex descobre que Iris, pressionada, forneceu informações críticas, e Jack falhou em proteger os interesses da agência.",
+                },
+            ];
+
+            let nivelAtual = 0;
+            let pistasRestantes = 3;
+            let tempoRestante = 60;
+            let cronometro;
+            let narrativaCompleta = "";
+
+            function iniciarJogo() {
+                document.getElementById("inicio").style.display = "none";
+                document.getElementById("jogo").style.display = "block";
+                atualizarEnigma();
+                iniciarCronometro();
+            }
+
+            function atualizarEnigma() {
+                const enigmaAtual = enigmas[nivelAtual];
+                document.getElementById("mensagem").textContent =
+                    enigmaAtual.historia;
+                document.getElementById(
+                    "proposicao"
+                ).textContent = `Proposição: ${enigmaAtual.proposicao}`;
+                document.getElementById("valorConhecido").textContent =
+                    enigmaAtual.valorConhecido;
+                document.getElementById("pista").textContent = "???";
+
+                const select = document.getElementById("resposta");
+                select.innerHTML =
+                    '<option value="">Escolha uma resposta</option>';
+                enigmaAtual.opcoes.forEach((opcao) => {
+                    const option = document.createElement("option");
+                    option.textContent = opcao;
+                    option.value = opcao;
+                    select.appendChild(option);
+                });
+
+                document.getElementById("resultado").textContent = "";
+                document.getElementById(
+                    "mensagemEnigmaContainer"
+                ).style.display = "none";
+            }
+
+            function verificarResposta() {
+                const enigmaAtual = enigmas[nivelAtual];
+                const respostaSelecionada =
+                    document.getElementById("resposta").value;
+
+                if (respostaSelecionada === enigmaAtual.respostaEsperada) {
+                    document.getElementById("resultado").textContent =
+                        "Decifrado com sucesso!";
+                    narrativaCompleta += `<p>${enigmaAtual.historia} - ${enigmaAtual.mensagem}</p>`;
+                    mostrarMensagemEnigma(enigmaAtual.mensagem);
+                } else {
+                    document.getElementById("resultado").textContent =
+                        "Resposta incorreta. Tente novamente.";
+                }
+            }
+
+            function mostrarMensagemEnigma(mensagem) {
+                clearInterval(cronometro);
+                document.getElementById("mensagemEnigma").textContent =
+                    mensagem;
+                document.getElementById("jogo").style.display = "none";
+                document.getElementById(
+                    "mensagemEnigmaContainer"
+                ).style.display = "block";
+            }
+
+            function proximoEnigma() {
+                nivelAtual++;
+                if (nivelAtual < enigmas.length) {
+                    tempoRestante = 60;
+                    iniciarCronometro();
+                    atualizarEnigma();
+                    document.getElementById(
+                        "mensagemEnigmaContainer"
+                    ).style.display = "none";
+                    document.getElementById("jogo").style.display = "block";
+                } else {
+                    mostrarHistoriaCompleta();
+                }
+            }
+
+            function usarPista() {
+                if (pistasRestantes > 0) {
+                    const enigmaAtual = enigmas[nivelAtual];
+                    document.getElementById("pista").textContent =
+                        enigmaAtual.pista;
+                    pistasRestantes--;
+                    document.getElementById("pistasRestantes").textContent =
+                        pistasRestantes;
+                } else {
+                    document.getElementById("pistasUsadas").textContent =
+                        "Você não possui mais pistas disponíveis.";
+                }
+            }
+
+            function iniciarCronometro() {
+                document.getElementById("tempo").textContent = tempoRestante;
+                cronometro = setInterval(() => {
+                    tempoRestante--;
+                    document.getElementById("tempo").textContent =
+                        tempoRestante;
+                    if (tempoRestante <= 0) {
+                        clearInterval(cronometro);
+                        document.getElementById("resultado").textContent =
+                            "Tempo esgotado! Você falhou.";
+                    }
+                }, 1000);
+            }
+
+            function mostrarHistoriaCompleta() {
+                document.getElementById("jogo").style.display = "none";
+                document.getElementById(
+                    "mensagemEnigmaContainer"
+                ).style.display = "none";
+                document.getElementById("fim").style.display = "block";
+                document.getElementById("historiaCompleta").innerHTML =
+                    narrativaCompleta;
+            }
+
+            function reiniciarJogo() {
+                nivelAtual = 0;
+                pistasRestantes = 3;
+                tempoRestante = 60;
+                narrativaCompleta = "";
+                document.getElementById("fim").style.display = "none";
+                document.getElementById("inicio").style.display = "block";
+            }
+        </script>
+    </body>
+</html>
