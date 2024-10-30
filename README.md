@@ -25,8 +25,9 @@ Agente Lógico é um jogo de raciocínio onde você assume o papel de Alex, um a
 1. Baixe ou clone o repositório.
 2. Abra o arquivo `index.html` em seu navegador.
 
-## Contribuições
-Contribuições são bem-vindas! Sinta-se à vontade para abrir uma issue ou pull request.
-
-## Licença
-Este projeto está licenciado sob a [MIT License](LICENSE).
+## Integrantes
+- Caio Furtado
+- Davi Gomes
+- Gabriel Rodrigues
+- Artur Bezerra
+- Emanuel Henry
