@@ -167,118 +167,114 @@
                 // Nível 1
                 {
                     historia:
-                        "Agente Alex descobre que os documentos foram removidos de um cofre durante uma operação. P (Agente Peter) afirma que Q (Agente Quinn) estava presente no cofre. Se P está dizendo a verdade, Q deve ter sido visto no cofre.",
+                        "Durante uma operação, documentos desapareceram misteriosamente de um cofre. Agente Peter comenta que viu alguém próximo ao local, enquanto Agente Quinn diz que não esteve lá. Peter é conhecido por sua honestidade, mas Quinn tem sido monitorado por comportamentos suspeitos.",
                     proposicao: "P ∧ Q = V",
-                    valorConhecido: "P é verdadeiro",
                     opcoes: [
                         "Q = Verdadeiro",
                         "Q = Falso",
                         "Q = Verdadeiro/Falso",
                     ],
                     respostaEsperada: "Q = Verdadeiro",
-                    pista: "Peter é um agente de confiança, mas Quinn esteve sob observação recentemente.",
+                    pista: "Peter não costuma mentir, mas Quinn já teve comportamentos irregulares.",
                     mensagem:
-                        "O agente Alex confirma que Quinn esteve no cofre, o que levanta novas suspeitas sobre o seu envolvimento no roubo dos documentos.",
+                        "Alex confirma que Quinn esteve no cofre, o que levanta dúvidas sobre seu envolvimento no roubo.",
                 },
+
                 {
                     historia:
-                        "Durante a investigação, o agente Alex descobre que dois agentes, R (Agente Ryan) e S (Agente Sarah), deveriam estar em locais diferentes durante a operação. No entanto, Sarah reportou que Ryan estava em uma área restrita, o que contradiz os registros oficiais.",
+                        "Durante uma investigação, Alex descobre que Agente Ryan e Agente Sarah deveriam estar em locais diferentes, mas Sarah afirma que viu Ryan em uma área restrita. Essa afirmação contradiz os registros da agência.",
                     proposicao: "¬(R ∨ S) = V",
-                    valorConhecido: "S é falso",
                     opcoes: [
                         "R = Verdadeiro",
                         "apenas S = Falso",
                         "Nenhum dos dois = Verdadeiro",
                     ],
                     respostaEsperada: "Nenhum dos dois = Verdadeiro",
-                    pista: "Os registros de segurança mostram falhas de acesso, mas Sarah não tem histórico de mentiras.",
+                    pista: "Sarah raramente mente, e os registros de segurança mostram algo estranho.",
                     mensagem:
-                        "Após análise dos registros, ficou claro que nenhum dos dois agentes estava na área restrita, sugerindo uma manipulação externa para incriminar Ryan.",
+                        "Nenhum dos dois estava na área, sugerindo manipulação dos registros.",
                 },
                 {
                     historia:
-                        "O agente Alex descobre que o traidor só conseguirá escapar do país se T (Agente Taylor) confiar no traidor e U (Agente Uma) der o aval final. A confiança de Taylor é essencial para a execução do plano.",
+                        "Agente Taylor, conhecido por sua tendência a confiar nas pessoas erradas, supostamente apoiou um traidor. No entanto, o plano só seria possível se Taylor confiasse e Agente Uma desse o aval final. Alex desconfia que Uma nunca apoiaria algo assim sem boas razões.",
                     proposicao: "T → U = V",
-                    valorConhecido: "T é verdadeiro",
                     opcoes: [
                         "U = Verdadeiro",
                         "U = Falso",
                         "T = Verdadeiro/Falso",
                     ],
                     respostaEsperada: "U = Verdadeiro",
-                    pista: "Taylor foi manipulado anteriormente, mas Uma nunca escondeu sua lealdade à agência.",
+                    pista: "Taylor é propenso a confiar demais, mas Uma é leal.",
                     mensagem:
-                        "A investigação confirma que Uma não deu o aval, frustrando a tentativa de fuga do traidor.",
+                        "Alex confirma que Uma não deu o aval, frustrando o plano do traidor.",
                 },
 
                 // Nível 2
                 {
                     historia:
-                        "Agente Alex encontra sinais de que os agentes V (Agente Victor) e W (Agente Walter) estavam envolvidos na manipulação do sistema de câmeras para encobrir um encontro secreto. No entanto, Victor afirma que Walter não estava no local.",
-                    proposicao: "¬W → ¬V = V",
-                    valorConhecido: "W é falso",
+                        "Agente Alex suspeita que Agente Victor e Agente Walter estavam envolvidos em uma manipulação de câmeras. Victor afirma que Walter não estava lá, mas Alex se lembra de que Victor nunca mente em suas declarações.",
+                    proposicao: "¬W → ¬V = F",
                     opcoes: ["V = Verdadeiro", "V = Falso", "W = Verdadeiro"],
-                    respostaEsperada: "V = Falso",
-                    pista: "Há evidências de manipulação técnica no sistema, e Victor não tem histórico de mentiras.",
+                    respostaEsperada: "V = Verdadeiro",
+                    pista: "Victor é conhecido por sua sinceridade.",
                     mensagem:
-                        "Após a análise, Alex confirma que Victor estava no local, o que lança dúvidas sobre o envolvimento de um terceiro agente na manipulação dos registros.",
+                        "Após análise, Alex confirma que Victor estava presente, o que lança dúvidas sobre a manipulação.",
                 },
+
                 {
                     historia:
-                        "Agente Alex descobre que Y (Agente Yara), uma agente conhecida por sua desonestidade, acusa Z (Agente Zach) de comportamentos suspeitos durante uma operação. No entanto, Yara possui um histórico de mentiras.",
+                        "Agente Yara, uma agente com um histórico duvidoso, acusa Agente Zach de comportamentos suspeitos. Zach, no entanto, é conhecido por sua dedicação, e Alex desconfia da veracidade das acusações de Yara.",
                     proposicao: "¬Y → Z = V",
-                    valorConhecido: "Y é falso",
                     opcoes: ["Y = Verdadeiro", "Y = Falso", "Z = Verdadeiro"],
                     respostaEsperada: "Z = Verdadeiro",
-                    pista: "Yara foi recentemente advertida por falsas acusações contra outros agentes.",
+                    pista: "Yara tem um histórico de falsos testemunhos.",
                     mensagem:
-                        "Alex confirma que Zach é inocente, e a credibilidade de Yara foi ainda mais abalada, deixando sua posição na agência em risco.",
+                        "Alex confirma a inocência de Zach, reforçando as suspeitas sobre Yara.",
                 },
+
                 {
                     historia:
-                        "O agente Alex descobre que T (Agente Taylor) havia planejado desviar informações confidenciais, mas precisava do apoio de U (Agente Uma) para isso. A confiança de Uma era essencial para o sucesso do plano.",
+                        "Agente Taylor parece ter tramado desviar informações confidenciais, mas para isso precisaria do apoio de Agente Uma. Taylor é considerado impulsivo, mas Uma é bem fiel à agência.",
                     proposicao: "¬U → T = F",
-                    valorConhecido: "U é verdadeiro",
                     opcoes: ["T = Verdadeiro", "T = Falso", "U = Falso"],
                     respostaEsperada: "T = Falso",
-                    pista: "U sempre se mostrou leal, mas há indícios de pressão para mudar de lado.",
+                    pista: "Uma não costuma apoiar ideias duvidosas.",
                     mensagem:
-                        "Com a lealdade de Uma confirmada, o plano de Taylor foi frustrado antes de causar danos irreversíveis.",
+                        "Alex descobre que o plano de Taylor falhou, salvando a agência de um problema sério.",
                 },
 
                 // Nível 3
                 {
                     historia:
-                        "Agente Alex suspeita que dois agentes estão colaborando secretamente com uma organização inimiga. Se C (Agente Carl) está conspirando, então D (Agente Diana) deve ter fornecido acesso aos sistemas da agência.",
+                        "Agente Carl parece estar conspirando, mas ele precisaria da ajuda de Agente Diana, conhecida por seu histórico ruim. Carl é frequentemente visto como uma pessoa reservada.",
                     proposicao: "(C ∧ D) → E = V",
-                    valorConhecido: "C e D são verdadeiros",
                     opcoes: ["E = Verdadeiro", "E = Falso", "D = Falso"],
                     respostaEsperada: "E = Verdadeiro",
-                    pista: "Diana tem acesso direto aos sistemas de segurança, mas seu registro está limpo.",
+                    pista: "Diana possui acesso privilegiado aos sistemas da agência.",
                     mensagem:
-                        "Alex confirma que Ethan estava envolvido, revelando uma célula de conspiração dentro da agência.",
+                        "Alex descobre uma conspiração, com Diana envolvida no caso.",
                 },
+
                 {
                     historia:
-                        "Agente Alex descobre que, para ter sucesso em sua missão, um traidor deve ter o apoio de dois agentes leais, F (Agente Fiona) e G (Agente Greg). Além disso, o traidor H (Agente Henry) só consegue passar despercebido se ao menos um dos dois o apoiar.",
+                        "Para que um traidor H escapasse, precisaria do apoio da Agente Fiona ou Agente Greg. Alex sabe que Fiona é leal, mas há rumores de que Greg tem interesses próprios.",
                     proposicao: "(H ∧ F) ∨ (H ∧ G) = V",
-                    valorConhecido: "F é verdadeiro",
                     opcoes: ["G = Verdadeiro", "G = Falso", "F = Falso"],
                     respostaEsperada: "G = Verdadeiro",
-                    pista: "Fiona é conhecida por sua lealdade, mas Greg já foi visto em reuniões suspeitas.",
+                    pista: "Fiona sempre apoia a agência, mas Greg já foi visto com suspeitos.",
                     mensagem:
-                        "Após investigação, Alex confirma que Greg deu suporte a Henry, revelando uma nova camada de traição dentro da agência.",
+                        "Greg foi confirmado como aliado do traidor, causando impacto na equipe.",
                 },
+
                 {
                     historia:
-                        "Agente Alex descobre que uma célula inimiga infiltrada planeja uma grande sabotagem. A operação depende de I (Agente Iris) fornecer a localização de um alvo e de J (Agente Jack) neutralizar qualquer interferência da agência.",
-                    proposicao: "¬J ∧ (I → J) = V",
-                    valorConhecido: "J é falso",
+                        "Agente Alex investiga uma célula inimiga que depende da Agente Iris vazar dados, enquanto a função do Agente Jack é proteger os dados da agência. Jack tem sido um tanto distraido nas operações.",
+                    proposicao: "¬J ∧ ¬(I → J) = V",
                     opcoes: ["I = Verdadeiro", "I = Falso", "J = Verdadeiro"],
                     respostaEsperada: "I = Verdadeiro",
-                    pista: "Jack foi visto recentemente em reuniões confidenciais com outros agentes.",
+                    pista: "Jack tem se afastado de algumas operações confidenciais.",
                     mensagem:
-                        "Alex descobre que Iris, pressionada, forneceu informações críticas, e Jack falhou em proteger os interesses da agência.",
+                        "Iris colaborou com a célula, enquanto Jack falhou na proteção dos dados.",
                 },
             ];
 
